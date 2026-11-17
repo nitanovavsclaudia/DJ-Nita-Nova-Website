@@ -1,0 +1,16 @@
+{
+  "name": "djnitanova-website",
+  "private": true,
+  "description": "Statische Website djnitanova.de (kein Build-Schritt). Dieses package.json ist nur fuer Tests und Validierung.",
+  "scripts": {
+    "serve": "node tests/server.mjs",
+    "test": "node tests/run.mjs",
+    "validate": "html-validate site/index.html site/impressum/index.html site/datenschutz/index.html site/404.html",
+    "check-previews": "node tools/check_previews.mjs"
+  },
+  "devDependencies": {
+    "axe-core": "^4.14.1",
+    "html-validate": "^9.7.1",
+    "playwright": "^1.50.0"
+  }
+}
