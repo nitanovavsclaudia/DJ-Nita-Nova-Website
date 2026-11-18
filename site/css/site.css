@@ -447,3 +447,6 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
 
 #instagram>.wrap{padding-top:56px;padding-bottom:40px}
 #instagram .sec-head{margin-bottom:48px}
+
+/* Testimonials -> Playlists: Elfsight-Widget bringt eigenen Leerraum mit; Abstand nach unten straffen */
+#testimonials .widget-slot{margin-bottom:calc(-1 * var(--sec-y) + 8px)}
