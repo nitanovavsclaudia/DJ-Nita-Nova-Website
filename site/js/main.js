@@ -155,14 +155,34 @@
   }
 
   /* ------------------------------------------------------------ lineups */
-  var Ln = { cur: 0, ck: 0 };
+  /* Deckblatt <-> aufgeschlagene Karte: Ausgangszustand ist das Deckblatt (nichts gewaehlt), Klick auf eine Zeile schlaegt die Karte auf,
+     erneuter Klick auf die aktive Zeile oder "Uebersicht" blaettert zurueck. */
+  function face(pre, open, w, g) {
+    var front = $('#' + pre + '-front'), card = $('#' + pre + '-card');
+    front.hidden = open; card.hidden = !open;
+    var n = (face[pre] = (face[pre] || 0) + 1) % 2 ? 'a' : 'b';
+    restart(w, ['ln-a', 'ln-b'], 'ln-' + n);
+    if (open && g) restart(g, ['ln-ga', 'ln-gb'], 'ln-g' + n);
+    if (open && W.matchMedia && W.matchMedia('(max-width:720px)').matches) {
+      /* Mobil steht die Karte ueber der Liste: bei Bedarf ins Bild holen */
+      var p = $('#' + pre + '-panel'), r = p.getBoundingClientRect();
+      if (r.top < 0 || r.top > W.innerHeight * 0.6) p.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+    }
+  }
+  var Ln = { cur: -1 };
   function shine(el) { if (el && !reduced) restart(el, ['is-shine'], 'is-shine'); }
+  Ln.rows = function () { $$('.ln-row').forEach(function (b, n) { b.setAttribute('aria-pressed', n === Ln.cur ? 'true' : 'false'); }); };
+  Ln.reset = function (focusRow) {
+    var prev = Ln.cur; Ln.cur = -1; Ln.rows();
+    face('ln', false, $('#ln-w'));
+    if (focusRow && prev > -1) { var r = $$('.ln-row')[prev]; if (r) r.focus(); }
+  };
   Ln.set = function (i) {
     shine($$('.ln-row')[i]);
-    if (!NN || i === Ln.cur) return;
-    Ln.cur = i; Ln.ck++;
+    if (!NN) return;
+    if (i === Ln.cur) { Ln.reset(false); return; }
+    Ln.cur = i; Ln.rows();
     var c = NN.combos[i];
-    $$('.ln-row').forEach(function (b, n) { b.setAttribute('aria-pressed', n === i ? 'true' : 'false'); });
     $('#ln-title').textContent = c.t; $('#ln-desc').textContent = c.d; $('#ln-for').textContent = c.f;
     var box = $('.ln-art'), list = $('.ln-art-list');
     if (c.a.length) {
@@ -173,9 +193,7 @@
       }).join('');
       box.hidden = false;
     } else { box.hidden = true; list.innerHTML = ''; }
-    var ab = (Ln.ck % 2) ? 'a' : 'b';
-    restart($('#ln-w'), ['ln-a', 'ln-b'], 'ln-' + ab);
-    restart($('#ln-panel .ln-g'), ['ln-ga', 'ln-gb'], 'ln-g' + ab);
+    face('ln', true, $('#ln-w'), $('#ln-panel .ln-g'));
   };
 
   /* ------------------------------------------------------------ artist */
@@ -193,7 +211,7 @@
   }
 
   /* ------------------------------------------------------------ playlists (Spotify nach Klick) */
-  var Pl = { cur: 0, pk: 0, k: -1, pending: -1, sessionOk: false, token: 0, skips: 0, au: null };
+  var Pl = { cur: -1, k: -1, pending: -1, sessionOk: false, token: 0, skips: 0, au: null };
   Pl.audio = function () { if (!Pl.au) { Pl.au = new Audio(); Pl.au.preload = 'none'; } return Pl.au; };
   Pl.ok = function () { return Pl.sessionOk || LS.get('nn-consent-spotify') === '1'; };
   Pl.mark = function () {
@@ -209,7 +227,7 @@
     var l = NN.lists[Pl.cur], data = NN.plData[l.id] || [];
     $('#pl-title').textContent = l.title; $('#pl-sub').textContent = l.sub || '';
     $('#pl-link').href = 'https://open.spotify.com/playlist/' + l.id;
-    $$('.pl-row').forEach(function (b, n) { b.setAttribute('aria-pressed', n === Pl.cur ? 'true' : 'false'); });
+    Pl.rows();
     $('#pl-tracks').innerHTML = data.map(function (t, k) {
       return '<button type="button" class="trk-b" data-action="track" data-k="' + k + '" aria-pressed="false" style="all:unset;box-sizing:border-box;position:relative;cursor:pointer;display:flex;align-items:center;gap:16px;width:100%;padding:12px 14px;border-radius:14px;">' +
         '<span style="flex:none;width:46px;height:46px;border-radius:50%;background:linear-gradient(180deg,#F58F77,#D9606B);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 12px rgba(90,20,40,.3),inset 0 2px 0 rgba(255,255,255,.5)">' +
@@ -222,14 +240,19 @@
     cover.style.backgroundImage = have('img/covers/' + l.id + '.webp') ? 'url(/img/covers/' + l.id + '.webp),linear-gradient(200deg,#FAA68C,#D45F5E)' : '';
     $('#pl-consent').hidden = true; Pl.err('');
   };
+  Pl.rows = function () { $$('.pl-row').forEach(function (b, n) { b.setAttribute('aria-pressed', n === Pl.cur ? 'true' : 'false'); }); };
+  Pl.reset = function (focusRow) {
+    var prev = Pl.cur; Pl.stop(); Pl.cur = -1; Pl.rows(); Pl.pending = -1;
+    face('pl', false, $('#pl-w'));
+    if (focusRow && prev > -1) { var r = $$('.pl-row')[prev]; if (r) r.focus(); }
+  };
   Pl.set = function (i) {
     shine($$('.pl-row')[i]);
-    if (!NN || i === Pl.cur) return;
-    Pl.stop(); Pl.cur = i; Pl.pk++;
+    if (!NN) return;
+    if (i === Pl.cur) { Pl.reset(false); return; }
+    Pl.stop(); Pl.cur = i;
     Pl.render();
-    var ab = (Pl.pk % 2) ? 'a' : 'b';
-    restart($('#pl-w'), ['ln-a', 'ln-b'], 'ln-' + ab);
-    restart($('#pl-g'), ['ln-ga', 'ln-gb'], 'ln-g' + ab);
+    face('pl', true, $('#pl-w'), $('#pl-g'));
   };
   Pl.fail = function (k) {
     var b = $('.trk-b[data-k="' + k + '"]');
@@ -275,6 +298,8 @@
     'reel-load': function () { if ($('#reel-always').checked) LS.set('nn-consent-yt', '1'); Reels.load(); },
     'flip': function (t) { flip(t); },
     'combo': function (t) { Ln.set(Number(t.getAttribute('data-i'))); },
+    'ln-reset': function () { Ln.reset(true); },
+    'pl-reset': function () { Pl.reset(true); },
     'artist': function (t) { openArtist(t.getAttribute('data-artist'), t); },
     'playlist': function (t) { Pl.set(Number(t.getAttribute('data-i'))); },
     'track': function (t) { Pl.track(Number(t.getAttribute('data-k'))); },
@@ -317,7 +342,7 @@
   D.addEventListener('keydown', function (e) { var m = $('#menu'); if (e.key === 'Escape' && m && m.open) { m.open = false; var s = $('summary', m); if (s) s.focus(); } });
 
   /* ------------------------------------------------------------ nav (Scrollspy) */
-  var navMap = { top: 'top', showreels: 'showreels', anlaesse: 'anlaesse', live: 'anlaesse', lineups: 'anlaesse', about: 'about', ablauf: 'about', anfrage: 'anfrage', testimonials: 'testimonials', faq: 'faq', playlists: 'faq', instagram: 'faq' };
+  var navMap = { top: 'top', showreels: 'showreels', anlaesse: 'anlaesse', live: 'anlaesse', lineups: 'anlaesse', about: 'about', ablauf: 'about', anfrage: 'anfrage', testimonials: 'testimonials', playlists: 'testimonials', instagram: 'testimonials', faq: 'faq' };
   function setActive(id) {
     $$('[data-nav]').forEach(function (a) {
       var on = a.getAttribute('data-nav') === id;
@@ -325,12 +350,23 @@
       if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
     });
   }
+  function atEnd() { return W.innerHeight + W.scrollY >= D.documentElement.scrollHeight - 4; }
   function initNav() {
     if (!('IntersectionObserver' in W) || !$('#showreels')) return;
     var io = new IntersectionObserver(function (es) {
+      if (atEnd()) { setActive('faq'); return; }
       es.forEach(function (en) { if (en.isIntersecting && navMap[en.target.id]) setActive(navMap[en.target.id]); });
     }, { rootMargin: '-40% 0px -55% 0px' });
     Object.keys(navMap).forEach(function (id) { var el = D.getElementById(id); if (el) io.observe(el); });
+    /* Die FAQ ist kurz und steht ganz am Ende: am Seitenende gilt sie als aktiv, auch wenn sie nie das Beobachtungsband erreicht */
+    var tick = false;
+    W.addEventListener('scroll', function () {
+      if (tick) return; tick = true;
+      W.requestAnimationFrame(function () {
+        tick = false;
+        if (atEnd()) setActive('faq');
+      });
+    }, { passive: true });
   }
 
   /* ------------------------------------------------------------ media */
@@ -359,7 +395,6 @@
       var p = 'img/thumbs/' + d.getAttribute('data-thumb') + '.webp';
       if (have(p)) d.style.backgroundImage = 'url(/' + p + ')';
     });
-    if (NN) { var c = NN.lists[0]; if (c && have('img/covers/' + c.id + '.webp')) $('#pl-cover').style.backgroundImage = 'url(/img/covers/' + c.id + '.webp),linear-gradient(200deg,#FAA68C,#D45F5E)'; }
   }
 
   /* ------------------------------------------------------------ marquee */
