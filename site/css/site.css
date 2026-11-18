@@ -466,8 +466,8 @@ button:hover .vs .vs-play,button:focus-visible .vs .vs-play,.vs:hover .vs-play{t
 @media(max-width:720px){.vs .vs-play{left:16px;top:138px;width:46px!important;height:46px!important}}
 
 /* Vertikale Live-Gesang-Videos: Glas-Button mittig */
-.vs .vs-play.vs-play-c{left:50%;top:50%;margin:-27px 0 0 -27px}
-@media(max-width:720px){.vs .vs-play.vs-play-c{left:50%;top:50%;margin:-23px 0 0 -23px}}
+.vs .vs-play.vs-play-v{left:16px!important;top:84px!important;margin:0!important}
+@media(max-width:720px){.vs .vs-play.vs-play-v{left:14px!important;top:90px!important;margin:0!important;width:44px!important;height:44px!important}}
 
 /* Header-Video: YouTube-Titelleiste (oben) und Rand (unten) aus dem Ausschnitt schieben */
 #hero-yt{top:-140px!important;bottom:auto!important;height:calc(100% + 220px)!important}
