@@ -342,7 +342,7 @@
   D.addEventListener('keydown', function (e) { var m = $('#menu'); if (e.key === 'Escape' && m && m.open) { m.open = false; var s = $('summary', m); if (s) s.focus(); } });
 
   /* ------------------------------------------------------------ nav (Scrollspy) */
-  var navMap = { top: 'top', showreels: 'showreels', anlaesse: 'anlaesse', live: 'anlaesse', lineups: 'anlaesse', about: 'about', ablauf: 'about', anfrage: 'anfrage', testimonials: 'testimonials', playlists: 'testimonials', instagram: 'testimonials', faq: 'faq' };
+  var navMap = { top: 'top', showreels: 'showreels', anlaesse: 'anlaesse', live: 'live', lineups: 'lineups', about: 'about', ablauf: 'about', anfrage: 'anfrage', testimonials: 'testimonials', playlists: 'testimonials', instagram: 'testimonials', faq: 'faq' };
   function setActive(id) {
     $$('[data-nav]').forEach(function (a) {
       var on = a.getAttribute('data-nav') === id;

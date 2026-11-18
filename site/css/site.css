@@ -52,7 +52,7 @@ h1,h2,h3{text-transform:uppercase}
 @media(max-width:720px){
 .c-wm{font-size:26vw !important;left:var(--edge) !important}
 .c-wm2,.c-vert{display:none !important}
-.c-photo{width:100% !important;opacity:.5}
+.c-photo{width:100% !important;opacity:var(--hero-photo-m)}
 }
 .fc{height:700px;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 @media (hover:hover){.fc:hover{transform:perspective(1800px) rotateX(2deg) rotateY(-3deg) translateY(-6px)}}
@@ -194,6 +194,20 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
   --wrap:1280px;--gutter:28px;--edge:28px;--vo:6px;
   --sec-y:clamp(64px,8vw,104px);                /* Abstand oben/unten je Abschnitt */
   --head-gap:clamp(32px,4vw,56px);              /* Abstand Header -> Inhalt */
+  /* ---- Staerke der Overlays/Filter (0 = aus, 1 = voll). Hier nachjustieren. ---- */
+  --hero-tint:.14;        /* Hero-Video: Koralle-Toenung (Mischmodus "color"); vorher .92 plus Graustufen */
+  --hero-dim:.30;         /* Hero-Video: Abdunklung am unteren Rand (geht in die dunkle Flaeche ueber) */
+  --hero-nav-scrim:.40;   /* Hero-Video: dunkler Verlauf oben, hinter Navigation und Erfahrungs-Label */
+  --hero-text-scrim:.42;  /* Hero-Video: lokaler dunkler Verlauf hinter der h1 und dem Button */
+  --hero-wm-scrim:.45;    /* Hero-Video: lokaler heller Verlauf hinter der dunklen Wortmarke "NITA NOVA" */
+  --hero-halftone:.05;    /* Hero-Video: Punktraster */
+  --hero-grain:.28;       /* Hero: Koernung (liegt ueber der ganzen Hero-Flaeche) */
+  --hero-photo-m:.78;     /* Hero-Video mobil: Deckkraft ueber der dunklen Flaeche */
+  --still-tint:.14;       /* Showreel-/Live-Vocals-Stills: Koralle-Toenung; vorher .9 plus Graustufen */
+  --still-sat:1.04;       /* Stills: Sattigung (1 = Original) */
+  --still-dim:.22;        /* Stills: Abdunklung unten (hinter Nummer/Beschriftung) */
+  --still-halftone:.04;   /* Stills: Punktraster */
+  --still-grain:.10;      /* Stills: Koernung */
 }
 @media(max-width:720px){:root{--gutter:24px;--edge:24px}}
 #page{font-size:var(--fs-body)}
@@ -266,14 +280,14 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
 /* ---- Flip-Karten: Klick irgendwo auf die Rueckseite dreht zurueck ---- */
 .fc.is-flipped .fc-back{cursor:pointer}
 
-/* ---- Video-Stills (Showreels + Live Vocals): Duotone in Orange -> Koralle -> Magenta ----
-   Das Standbild bleibt in Graustufen (Helligkeit/Kontrast), die Farbe kommt per "color"-Mischmodus darueber, ein zweiter Ton
-   (overlay) gibt Tiefe. Raster und Koernung bleiben leise, damit das Motiv gut erkennbar ist. */
-.vs .thumb{filter:grayscale(1) contrast(1.18) brightness(1.22)!important}
-.vs .vs-tint{background:linear-gradient(200deg,#FFA040 0%,#F0506A 52%,#E02D93 100%)!important;mix-blend-mode:color;opacity:.9}
-.vs .vs-tint+span{background:linear-gradient(0deg,rgba(120,20,90,.5),transparent 58%),linear-gradient(200deg,rgba(255,170,70,.4),rgba(240,60,120,.0) 60%)!important;mix-blend-mode:overlay;opacity:1}
-.vs.ht::before{opacity:.07}
-.vs.grain::after{opacity:.2}
+/* ---- Video-Stills (Showreels + Live Vocals): fast Originalfarbe, nur leichte Toenung ----
+   Staerke ueber die Variablen --still-* (siehe :root). Das Standbild behaelt seine Farben (--still-sat), darueber liegt eine
+   zarte Koralle/Magenta-Toenung im "color"-Mischmodus (--still-tint), unten ein weicher Verlauf fuer Nummer/Beschriftung (--still-dim). */
+.vs .thumb{filter:saturate(var(--still-sat))!important}
+.vs .vs-tint{background:linear-gradient(200deg,#FFB877 0%,#F0806A 50%,#C9505F 100%)!important;mix-blend-mode:color;opacity:var(--still-tint)}
+.vs .vs-tint+span{background:linear-gradient(0deg,rgba(20,18,22,var(--still-dim)),transparent 50%)!important;mix-blend-mode:normal;opacity:1}
+.vs.ht::before{opacity:var(--still-halftone)}
+.vs.grain::after{opacity:var(--still-grain)}
 
 /* Dekoratives Outline-Wort "Reels" bekommt eigenen Platz unter den Kacheln (keine Ueberlappung mit Inhalt) */
 @media(min-width:721px){#showreels{padding-bottom:calc(var(--sec-y) + 11vw)}}
@@ -375,3 +389,54 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
   .ln-arrow{width:64px;height:64px;font-size:30px;margin-top:-32px;left:calc(56px + 32px)}
   #ln-panel,#pl-panel{order:-1;margin:0 16px 16px 0}
 }
+
+/* ===================== Runde 4 ===================== */
+/* ---- Hero-Video: Originalfarbe, nur leichte Toenung; Lesbarkeit ueber lokale Verlaeufe hinter der Schrift ---- */
+.hero-tint,.hero-scrim{position:absolute;inset:0;pointer-events:none}
+.hero-tint{background:linear-gradient(200deg,#FFB877,#F0806A 45%,#C9505F 80%,#7a2a3a);mix-blend-mode:color;opacity:var(--hero-tint)}
+.hero-scrim-top{bottom:auto;height:240px;background:linear-gradient(180deg,rgba(20,18,22,var(--hero-nav-scrim)),transparent)}
+.hero-scrim-bottom{top:auto;height:62%;background:linear-gradient(0deg,rgba(20,18,22,var(--hero-dim)),transparent)}
+/* helle Insel hinter der dunklen Wortmarke (rechts der Kante); mobil ist die Wortmarke hell, dort dunkel */
+.hero-scrim-wm{inset:auto;left:0;top:calc(var(--hy) - 24px);width:calc(var(--wm) * 1.5);height:calc(var(--wm) * 1.9);background:radial-gradient(ellipse 62% 56% at 22% 48%,rgba(244,236,228,var(--hero-wm-scrim)),transparent 72%)}
+.c-photo.ht::before{opacity:var(--hero-halftone)}
+.c-photo.grain::after{display:none}
+#top.grain::after{opacity:var(--hero-grain)}
+.hero-copy::before{content:"";position:absolute;z-index:-1;inset:-70px -9vw -60px -70px;background:radial-gradient(ellipse 62% 60% at 58% 56%,rgba(20,18,22,var(--hero-text-scrim)),transparent 72%);pointer-events:none}
+@media(max-width:720px){
+  .hero-scrim-wm{width:100%;left:0;height:calc(var(--wm) * 2.1);background:radial-gradient(ellipse 80% 60% at 30% 48%,rgba(20,18,22,var(--hero-text-scrim)),transparent 75%)}
+}
+
+/* ---- Label "Ueber 15 Jahre Erfahrung": rechts oben ueber dem Video, unter der Navigationsleiste ---- */
+.hero-badge{position:absolute;z-index:6;top:128px;right:var(--edge);margin:0;font-family:'DM Mono',ui-monospace,monospace;font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;text-align:right;white-space:nowrap;color:var(--coral);text-shadow:0 1px 10px rgba(20,18,22,.55)}
+@media(max-width:720px){.hero-badge{top:96px;letter-spacing:.1em}}
+
+/* ---- Navigation: neun Punkte, auf 1024-1440 px in einer Zeile ---- */
+.hero-nav{grid-template-columns:auto minmax(0,1fr) auto}
+.hero-nav>nav{justify-self:center;max-width:100%;box-sizing:border-box;gap:2px!important}
+.hero-nav .nav-a{white-space:nowrap;padding:0 clamp(5px,.78vw,18px)!important;min-height:52px!important;font-size:clamp(12.5px,.3vw + 9.7px,15px)}
+.hero-nav>.btn-h{white-space:nowrap;padding:0 clamp(14px,1.6vw,26px)!important;font-size:clamp(13.5px,.4vw + 10.5px,16px)}
+.hero-nav>nav{padding:5px!important}
+/* bis 1000 px: Menue-Knopf statt Leiste (neun Punkte passen dort nicht mehr) */
+@media(max-width:1010px){
+  .hero-nav>nav,.hero-nav>.btn-h{display:none!important}
+  .hero-nav>#menu{display:block!important;width:auto;flex:1;margin-left:auto}
+  .hero-nav{display:flex;justify-content:space-between}
+}
+
+/* ---- Instagram: Rahmen wie die Konditionskarten-Vorderseite (Pfirsich-Verlauf, Raster, Koernung, harte Schattenkante) ---- */
+#instagram .sec-head{align-items:flex-end}
+.insta-card{position:relative;isolation:isolate;overflow:hidden;box-sizing:border-box;margin:0 24px 24px 0;padding:clamp(16px,2.6vw,36px);border-radius:24px;border:1px solid rgba(255,255,255,.6);
+  background:radial-gradient(ellipse 60% 50% at 50% 35%,rgba(255,236,214,.6),transparent 65%),linear-gradient(170deg,#FFE9D4,#FDCDB6 50%,#F9B6A0);
+  box-shadow:0 30px 50px -14px rgba(90,20,40,.45),inset 0 3px 0 rgba(255,255,255,.5),inset 0 -30px 50px rgba(60,10,30,.12),12px 12px 0 -2px #F9B6A0,24px 24px 0 -4px #F0806A}
+.insta-card::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(#141216 1.2px,transparent 1.7px) 0 0/7px 7px;opacity:.22;mix-blend-mode:multiply;pointer-events:none}
+.insta-card::after{content:"";position:absolute;inset:0;z-index:0;background:url(../img/grain.webp) repeat;background-size:256px;mix-blend-mode:overlay;opacity:.55;pointer-events:none}
+.insta-card>.widget-slot{position:relative;z-index:1}
+@media(max-width:720px){.insta-card{margin:0 14px 14px 0;box-shadow:0 30px 50px -14px rgba(90,20,40,.45),inset 0 3px 0 rgba(255,255,255,.5),inset 0 -30px 50px rgba(60,10,30,.12),8px 8px 0 -2px #F9B6A0,14px 14px 0 -4px #F0806A}}
+/* Elfsight-Elemente (Light DOM, kein Shadow DOM; Klassennamen ohne Netz nicht pruefbar, daher Muster): Widget-Huelle durchsichtig,
+   Karten abgerundet mit Board-Kontur und harter Kante. Hauptgestaltung bleibt im Elfsight-Dashboard. */
+.insta-card [class*="eapps-widget"],.insta-card [class*="eapps-instagram-feed-container"],.insta-card [class*="eapps-instagram-feed-posts"]{background-color:transparent!important}
+.insta-card [class*="eapps-instagram-feed-posts-item"]{border-radius:18px!important;overflow:hidden}
+/* Nummern auf den Stills: hell statt dunkel, damit sie auf Originalfarben lesbar bleiben */
+.vs span[style*="text-stroke"]{-webkit-text-stroke-color:var(--cream)!important;text-shadow:0 1px 12px rgba(20,18,22,.45)}
+/* Mobil-Menue: neun Punkte, Eintraege behalten ihre Hoehe (44 px) und das Menue liegt ueber Hero-Text und Label */
+#menu>div>a{flex:none;box-sizing:border-box}
