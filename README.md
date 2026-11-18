@@ -33,7 +33,7 @@ npx html-validate site/index.html site/impressum/index.html site/datenschutz/ind
 node tools/check_previews.mjs     # prüft die Spotify-Hörproben (braucht Netz, läuft wöchentlich als GitHub-Action)
 ```
 
-YouTube, Spotify und Formspree werden in den Tests gemockt (`page.route`). Screenshots landen in `tests/shots/` (nicht im Git).
+YouTube, Spotify, Formspree und Elfsight (inkl. Google-/Instagram-Bilder) werden in den Tests gemockt (`page.route`); die CSP aus `_headers` wird dabei echt ausgewertet. Datenschutz-Test: vor der ersten Interaktion nur localhost, Hero-YouTube und Elfsight/Google/Instagram-Hosts. Screenshots landen in `tests/shots/` (nicht im Git).
 
 ## Bewusste Entscheidungen / Abweichungen vom Board
 
@@ -41,7 +41,8 @@ YouTube, Spotify und Formspree werden in den Tests gemockt (`page.route`). Scree
 - **YouTube-Videos und Spotify-Hörproben nur nach Klick** (Hinweis + „Video laden“ / „Abspielen“, optional „immer“ gemerkt in `localStorage`; „Einwilligungen zurücksetzen“ im Footer).
 - **Keine Remote-Bilder:** Thumbnails (WebP 960 px) und Playlist-Cover (WebP 300 px, quadratisch zugeschnitten) liegen lokal in `img/thumbs`, `img/covers`; fehlt eine Datei, bleibt der Board-Verlauf.
 - **Piano-Foto (Wido Kim):** Das Instagram-Profilbild hat nur 150×150 px. Es wurde mit Lanczos auf 600×600 hochskaliert, leicht weichgezeichnet und mit demselben Koralle/Orange-Duotone wie die anderen Artist-Fotos versehen (`tools/optimize_assets.py`, `source/assets/duotone-clut.png`); Ausschnitt links-mittig (`pos: 36% 50%`). **Ein höher aufgelöstes Foto von Wido Kim wäre deutlich besser** (≥ 800×800 px als `source/assets/wido-profile150.jpg` ersetzen bzw. Skript anpassen, neuen Dateinamen vergeben).
-- **Instagram statisch:** 6 Kacheln verlinken aufs Profil. **Stimmen:** die grauen Platzhalter-Karten sind per `hidden` ausgeblendet (Kommentar im HTML), die linke Spalte („5,0“ …) bleibt.
+- **Stimmen und Instagram per Elfsight (Wunsch von Anita):** `platform.js` (einmal, `async`) lädt beim Seitenaufruf, **ohne Einwilligungsklick**; Google-Rezensionen `elfsight-app-53643658-…`, Instagram-Feed `elfsight-app-e3e7fd65-…`, beide mit `data-elfsight-app-lazy`. Platzhalter-Karten und „5,0“-Spalte sind entfernt; ein Fallback-Text erscheint, solange/falls das Widget nicht lädt. Links/Buttons zu Google werden per CSS best effort ausgeblendet (`.widget-reviews …` in `site.css`); Anzahl, „Alle ansehen“, Layout und Schrift stellt man im **Elfsight-Dashboard** ein. CSP und Datenschutzerklärung (Abschnitt 8, rot markiert) sind darauf angepasst. **Rechtlich offen:** automatisches Laden ohne Einwilligung (§ 25 TDDDG), siehe `[[BITTE PRÜFEN]]` im Datenschutz.
+- **Design-System:** Skala als CSS-Variablen am Anfang des Blocks „Design-System (v2)“ in `site.css` (`--fs-h2/h3/h4/lead/body-lg/body/small/label/btn`, `--sec-y`, `--head-gap`, `--wrap`, `--gutter`). Neue Abschnitte: `<section class="sec"><div class="wrap"><div class="sec-head"><h2 class="h2">…</h2><p class="lead">…</p></div>…`. Auf Folgeabschnitte mit gleichem Hintergrund `sec-cont` setzen.
 - **Overlays als `<dialog>`** (ESC, Fokusfalle, inerter Hintergrund). Beim Anfrage-Formular schließt ein Klick auf die Karte nicht.
 - **Anfrage-Buttons** auf den Flip-Karten und bei den Line-ups öffnen das Formular (Anlass bzw. Line-up vorbelegt; `mailto:` bleibt als Fallback ohne JavaScript).
 - **Formular → Formspree** (`https://formspree.io/f/xvkaaqqd`), Honeypot `_gotcha`, Zeitfalle (< 3 s: nicht gesendet, Hinweis), Entwurf in `sessionStorage`. Native Browser-Pflichtfeldprüfung statt `novalidate`. Formular-Kontrast nach WCAG AA angepasst (dunkle Schrift auf Korall).
@@ -73,7 +74,7 @@ YouTube, Spotify und Formspree werden in den Tests gemockt (`page.route`). Scree
 3. Playlist-Cover: besser eigene Grafiken (Spotify-Mosaik-Cover zeigen fremde Albumcover, urheberrechtlich heikel).
 4. Höher aufgelöstes Foto von Wido Kim, 4 Artist-Bios, ggf. Homepage-Links statt Instagram-Links.
 5. Echte Rezensions-Zitate (3–6, Vorname + Anlass); bestätigen, dass „5,0 / 9 Google-Rezensionen“ noch stimmt.
-6. 6 Instagram-Bilder (optional) oder Entscheidung für Elfsight.
+6. **Elfsight-Dashboard prüfen:** Google-Rezensionen (ca. 6 anzeigen, „Alle ansehen“/„Bewertung abgeben“ ausschalten, Layout, System-Schrift statt Google Fonts) und Instagram-Feed (Raster, Anzahl); Datenschutz-Entscheidung zu Elfsight (automatisches Laden).
 7. Rechtstexte: alle `[[BITTE PRÜFEN]]` klären (Formspree-DPA akzeptieren, Speicherdauer, Cloudflare-DPA/DPF, Löschfrist unbeantworteter Anfragen, Bildnachweise); mit eRecht24 / Dr. Schwenke abgleichen oder anwaltlich prüfen lassen. Cloudflare Web Analytics im Pages-Projekt ausgeschaltet lassen (sonst stimmt „kein Tracking“ nicht). Bestätigen, dass die Privatanschrift öffentlich im Impressum stehen darf (bei Gewerbe nötig, kein Postfach).
 
 **Freigeben**

@@ -156,7 +156,9 @@
 
   /* ------------------------------------------------------------ lineups */
   var Ln = { cur: 0, ck: 0 };
+  function shine(el) { if (el && !reduced) restart(el, ['is-shine'], 'is-shine'); }
   Ln.set = function (i) {
+    shine($$('.ln-row')[i]);
     if (!NN || i === Ln.cur) return;
     Ln.cur = i; Ln.ck++;
     var c = NN.combos[i];
@@ -166,7 +168,7 @@
     if (c.a.length) {
       list.innerHTML = c.a.map(function (k) {
         var a = NN.artists[k];
-        return '<button type="button" class="ln-ab" data-action="artist" data-artist="' + esc(k) + '" aria-haspopup="dialog" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:1.5px solid #141216;border-radius:999px;background:rgba(255,255,255,.5);padding:10px 18px;font-weight:600;font-size:26px;color:#141216">' +
+        return '<button type="button" class="ln-ab" data-action="artist" data-artist="' + esc(k) + '" aria-haspopup="dialog" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:1.5px solid #141216;border-radius:999px;background:rgba(255,255,255,.5);padding:10px 18px;font-weight:600;color:#141216">' +
           esc(a.role + ': ' + a.name) + ' <span aria-hidden="true" style="color:#C9505F">→</span></button>';
       }).join('');
       box.hidden = false;
@@ -213,14 +215,15 @@
         '<span style="flex:none;width:46px;height:46px;border-radius:50%;background:linear-gradient(180deg,#F58F77,#D9606B);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 12px rgba(90,20,40,.3),inset 0 2px 0 rgba(255,255,255,.5)">' +
         '<svg class="i-play" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="#141216"></path></svg>' +
         '<svg class="i-pause" hidden width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="#141216"></path></svg></span>' +
-        '<span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span class="trk-t" style="font-weight:700;font-size:21px;line-height:1.2">' + esc(t[0]) + '</span>' +
-        '<span class="trk-a" style="font-size:16px;color:#4a3a40;line-height:1.25">' + esc(t[1]) + '</span></span></button>';
+        '<span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span class="trk-t" style="font-weight:700;line-height:1.2">' + esc(t[0]) + '</span>' +
+        '<span class="trk-a" style="color:#4a3a40;line-height:1.25">' + esc(t[1]) + '</span></span></button>';
     }).join('');
     var cover = $('#pl-cover');
     cover.style.backgroundImage = have('img/covers/' + l.id + '.webp') ? 'url(/img/covers/' + l.id + '.webp),linear-gradient(200deg,#FAA68C,#D45F5E)' : '';
     $('#pl-consent').hidden = true; Pl.err('');
   };
   Pl.set = function (i) {
+    shine($$('.pl-row')[i]);
     if (!NN || i === Pl.cur) return;
     Pl.stop(); Pl.cur = i; Pl.pk++;
     Pl.render();
@@ -290,6 +293,8 @@
     var t = e.target.closest ? e.target.closest('[data-action]') : null;
     if (t) { var fn = actions[t.getAttribute('data-action')]; if (fn) fn(t, e); }
     else {
+      var fcb = e.target.closest && e.target.closest('.fc.is-flipped');
+      if (fcb && !e.target.closest('a,button,input,select,textarea,label,[data-keep]')) flip(fcb);
       var dlg = e.target.closest && e.target.closest('dialog.dlg');
       if (dlg && dlg.getAttribute('data-card-closes') === '1' && e.target.closest('.dlg-card') && !e.target.closest('a,button,iframe,input,select,textarea,label,[data-keep]')) Dlg.close(dlg);
     }
@@ -353,10 +358,6 @@
     $$('.thumb[data-thumb]').forEach(function (d) {
       var p = 'img/thumbs/' + d.getAttribute('data-thumb') + '.webp';
       if (have(p)) d.style.backgroundImage = 'url(/' + p + ')';
-    });
-    $$('a[data-insta]').forEach(function (a) {
-      var p = 'img/insta/' + a.getAttribute('data-insta') + '.webp';
-      if (have(p)) { var i = D.createElement('img'); i.src = '/' + p; i.alt = ''; i.loading = 'lazy'; i.width = 600; i.height = 600; i.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover'; a.insertBefore(i, a.firstChild); }
     });
     if (NN) { var c = NN.lists[0]; if (c && have('img/covers/' + c.id + '.webp')) $('#pl-cover').style.backgroundImage = 'url(/img/covers/' + c.id + '.webp),linear-gradient(200deg,#FAA68C,#D45F5E)'; }
   }
