@@ -191,7 +191,7 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
   --fs-btn:1rem;                                /* Buttons: 16 px */
   --fs-numeral:clamp(110px,14vw,210px);         /* grosse Outline-Ziffern (Ablauf) */
   /* Raster und Abstaende */
-  --wrap:1280px;--gutter:28px;--edge:28px;--vo:8px;
+  --wrap:1280px;--gutter:28px;--edge:28px;--vo:6px;
   --sec-y:clamp(64px,8vw,104px);                /* Abstand oben/unten je Abschnitt */
   --head-gap:clamp(32px,4vw,56px);              /* Abstand Header -> Inhalt */
 }
@@ -219,14 +219,22 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
 @media(max-width:720px){.h2-btn .bw{width:56px!important;height:56px!important;font-size:30px!important}}
 
 /* ---- Hero: Wortmarke, Logo und Navigationsleiste ---- */
-#top{--wm:clamp(6.5rem,17vw,19rem)}      /* Wortmarke "NITA NOVA": 104 -> 320 px, bleibt ueber der Hero-Zeile */
-.c-wm{left:max(17%,232px);font-size:var(--wm)}
-.hero-copy{left:max(17%,232px)}
-.hero-nav{position:relative;z-index:6;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:22px var(--edge) 0}
-.hero-nav .logo-anim{display:block;height:58px;width:auto;justify-self:start}
+/* Wortmarke "NITA NOVA": 22vw wie in der ersten Fassung, gedeckelt (340 px), damit sie auf grossen Schirmen die h1 nie beruehrt.
+   Die Kante der dunklen Flaeche (--hx) haengt an der Wortmarke: sie schneidet immer durch das A von NITA und das V/A von NOVA.
+   Links der Kante steht die Wortmarke hell auf Dunkel, rechts davon dunkel auf dem Foto (c-wm2), so bleiben beide Haelften lesbar. */
+#top{--hy:164px;--wm:min(22vw,340px);--wml:max(17%,232px);--hx:calc(var(--wml) + 1.315 * var(--wm))}
+.c-wm{left:var(--wml);font-size:var(--wm)}
+.c-wm2{clip-path:inset(0 0 0 var(--hx))}
+.c-photo{width:calc(100% - var(--hx))}
+.hero-copy{left:var(--wml)}
+.hero-nav{position:relative;z-index:6;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:16px var(--edge) 0}
+/* Logo: links und rechts buendig mit der vertikalen Schrift "Events & Hochzeit" (inkl. Outline-Kopie); Faktor per Pixelmessung kalibriert */
+.hero-nav .logo-anim{display:block;width:calc(var(--lw-k) * (774px + .34vw) / 7.04);height:auto;justify-self:start}
+#top{--lw-k:1.529}
 .hero-nav>.btn-h{justify-self:end}
 @media(max-width:720px){
-  .hero-nav{display:flex;justify-content:space-between}
+  .hero-nav{display:flex;justify-content:space-between;padding-top:22px}
+  .hero-nav .logo-anim{width:auto;height:58px}
   #top{min-height:760px!important}
 }
 
@@ -241,6 +249,9 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
 .ln-cta{margin-top:auto!important}
 .about-grid{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:64px;align-items:center}
 .about-grid p{margin:0 0 18px;color:#E9DED5}
+.about-grid .sec-head{margin-bottom:28px}
+.about-grid .sec-head .lead{color:var(--amber);max-width:none}
+.about-grid .sec-head p{margin:14px 0 0}
 .faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:start}
 @media(max-width:720px){.live-grid{gap:40px}.about-grid{gap:48px}}
 
@@ -257,10 +268,14 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
 /* ---- Flip-Karten: Klick irgendwo auf die Rueckseite dreht zurueck ---- */
 .fc.is-flipped .fc-back{cursor:pointer}
 
-/* ---- Video-Stills (Showreels + Live Vocals): Toenung, Raster und Koernung dezent ---- */
-.vs .vs-tint{opacity:.48}
+/* ---- Video-Stills (Showreels + Live Vocals): Duotone in Orange -> Koralle -> Magenta ----
+   Das Standbild bleibt in Graustufen (Helligkeit/Kontrast), die Farbe kommt per "color"-Mischmodus darueber, ein zweiter Ton
+   (overlay) gibt Tiefe. Raster und Koernung bleiben leise, damit das Motiv gut erkennbar ist. */
+.vs .thumb{filter:grayscale(1) contrast(1.18) brightness(1.22)!important}
+.vs .vs-tint{background:linear-gradient(200deg,#FFA040 0%,#F0506A 52%,#E02D93 100%)!important;mix-blend-mode:color;opacity:.9}
+.vs .vs-tint+span{background:linear-gradient(0deg,rgba(120,20,90,.5),transparent 58%),linear-gradient(200deg,rgba(255,170,70,.4),rgba(240,60,120,.0) 60%)!important;mix-blend-mode:overlay;opacity:1}
 .vs.ht::before{opacity:.07}
-.vs.grain::after{opacity:.22}
+.vs.grain::after{opacity:.2}
 
 /* Dekoratives Outline-Wort "Reels" bekommt eigenen Platz unter den Kacheln (keine Ueberlappung mit Inhalt) */
 @media(min-width:721px){#showreels{padding-bottom:calc(var(--sec-y) + 11vw)}}
@@ -287,11 +302,39 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
 @media (prefers-reduced-motion:reduce){.pick,.pick::after{transition:none}.pick::before{display:none}}
 
 /* ---- Eingebettete Widgets (Elfsight): Platzhalterhoehe gegen Layout-Sprung, Fallback-Text ---- */
-.widget-slot{position:relative;min-height:clamp(260px,28vw,380px)}
-.widget-insta{min-height:clamp(160px,17vw,240px)}
+.widget-slot{position:relative;min-height:clamp(260px,28vw,380px);width:100%}
+.widget-insta{min-height:clamp(220px,30vw,420px)}
+/* Der Widget-Container darf nie auf Hoehe 0 zusammenfallen (leere Divs haben Hoehe 0, dann bleibt ein "lazy" Widget unsichtbar):
+   volle Breite, Mindesthoehe vom Slot, kein festes max-width, kein Scrollbereich. */
+.widget-slot>[class*="elfsight-app"]{display:block;width:100%;max-width:none;min-height:inherit;height:auto;overflow:visible;box-sizing:border-box}
+.widget-slot [class*="eapps-widget"]{max-width:none}
 .widget-fallback{margin:0;max-width:52ch;font-size:var(--fs-small);line-height:1.5;color:#5E4E48}
+.widget-fallback a{color:var(--rose-text);font-weight:600}
+/* Solange das Widget leer ist, liegt der Fallback-Text mit Profil-Link sichtbar im Platzhalter; sobald es Inhalt hat, verschwindet er */
+.widget-slot>[class*="elfsight-app"]:empty+.widget-fallback{position:absolute;left:0;top:0;right:0}
 .widget-slot>[class*="elfsight-app"]:not(:empty)+.widget-fallback{display:none}
-/* Google-Links/-Buttons im Rezensions-Widget ausblenden (best effort: Klassennamen von Elfsight sind ohne Netz nicht pruefbar; Hauptschalter ist das Elfsight-Dashboard) */
+/* Besitzer-Leiste der Gratisversion ("Panel only seen by widget owner", Edit widget, Views, Share) ausblenden.
+   Der Hinweis "Free ... widget · powered by Elfsight" bleibt bewusst sichtbar (Nutzungsbedingungen der Gratisversion).
+   Klassennamen sind ohne Netz nicht pruefbar, daher mehrere plausible Muster; Hauptschalter bleibt das Elfsight-Dashboard. */
+.widget-slot [class*="eapps-widget-toolbar"],
+.widget-slot [class*="WidgetToolbar"],
+.widget-slot [class*="widget-toolbar"],
+.widget-slot [class*="eapps-widget-admin"],
+.widget-slot [class*="WidgetAdmin"],
+.widget-slot [class*="eapps-widget-owner"],
+.widget-slot [class*="WidgetOwner"],
+.widget-slot [class*="widget-owner"],
+.widget-slot [class*="owner-panel"],
+.widget-slot [class*="OwnerPanel"],
+.widget-slot [class*="eapps-widget-edit"],
+.widget-slot [class*="eapps-edit-"],
+.widget-slot [class*="eapps-widget-panel"],
+.widget-slot [class*="eapps-widget-hover"],
+.widget-slot a[href*="dash.elfsight.com"],
+.widget-slot a[href*="apps.elfsight.com"],
+.widget-slot a[href*="elfsight.com/editor"],
+.widget-slot a[href*="elfsight.com/dashboard"]{display:none!important}
+/* Google-Links/-Buttons im Rezensions-Widget ausblenden (best effort) */
 .widget-reviews a[href*="writereview"],
 .widget-reviews a[href*="search.google.com/local"],
 .widget-reviews a[href*="g.page"],
