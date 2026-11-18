@@ -464,3 +464,10 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
 .vs .vs-play svg path{fill:#fff!important}
 button:hover .vs .vs-play,button:focus-visible .vs .vs-play,.vs:hover .vs-play{transform:scale(1.1)}
 @media(max-width:720px){.vs .vs-play{left:16px;top:138px;width:46px!important;height:46px!important}}
+
+/* Vertikale Live-Gesang-Videos: Glas-Button mittig */
+.vs .vs-play.vs-play-c{left:50%;top:50%;margin:-27px 0 0 -27px}
+@media(max-width:720px){.vs .vs-play.vs-play-c{left:50%;top:50%;margin:-23px 0 0 -23px}}
+
+/* Header-Video: YouTube-Titelleiste (oben) und Rand (unten) aus dem Ausschnitt schieben */
+#hero-yt{top:-140px!important;bottom:auto!important;height:calc(100% + 220px)!important}

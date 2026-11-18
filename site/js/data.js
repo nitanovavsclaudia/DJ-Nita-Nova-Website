@@ -41,7 +41,7 @@ NN.combos = [
   ];
 
 /* Videos: t Titel, id YouTube-ID, v 1 = Hochformat (9:16) */
-NN.reels = { 1: { t: 'Corporate', id: 'gRq_w-gEbjE' }, 2: { t: 'Hochzeit & Private Party', id: 'jB67ePODs-o' }, 3: { t: 'Team Liebe Event', id: 'zmBi-acoRCk' }, 4: { t: 'Live Gesang 1', id: 'YD9oklFHb8U', v: 1 }, 5: { t: 'Live Gesang 2', id: '4n98ThhMBSo', v: 1 }, 6: { t: 'Live Gesang 3', id: '9avtELFt21s', v: 1 } };
+NN.reels = { 1: { t: 'Corporate', id: 'gRq_w-gEbjE' }, 2: { t: 'Hochzeit & Private Party', id: 'jB67ePODs-o' }, 3: { t: 'Team Liebe Event', id: 'zmBi-acoRCk' }, 4: { t: 'Murder on the Dance Floor', id: 'YD9oklFHb8U', v: 1 }, 5: { t: 'Freed from Desire', id: '4n98ThhMBSo', v: 1 }, 6: { t: 'Pump Up the Jam', id: 'HgqAPBdPOek', v: 1 } };
 
 /* Hintergrund der Video-Karte je Video (g Verlauf) */
 NN.reelBgs = {

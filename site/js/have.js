@@ -1,7 +1,6 @@
 /* AUTOMATISCH von tools/optimize_assets.py erzeugt: Liste der optionalen Bilder, die vorhanden sind. */
 window.NN_HAVE = [
  "img/thumbs/4n98ThhMBSo.webp",
- "img/thumbs/9avtELFt21s.webp",
  "img/thumbs/YD9oklFHb8U.webp",
  "img/thumbs/gRq_w-gEbjE.webp",
  "img/thumbs/jB67ePODs-o.webp",
