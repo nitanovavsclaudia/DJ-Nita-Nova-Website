@@ -199,7 +199,7 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
   --hero-dim:.30;         /* Hero-Video: Abdunklung am unteren Rand (geht in die dunkle Flaeche ueber) */
   --hero-nav-scrim:.40;   /* Hero-Video: dunkler Verlauf oben, hinter Navigation und Erfahrungs-Label */
   --hero-text-scrim:.42;  /* Hero-Video: lokaler dunkler Verlauf hinter der h1 und dem Button */
-  --hero-wm-scrim:.45;    /* Hero-Video: lokaler heller Verlauf hinter der dunklen Wortmarke "NITA NOVA" */
+  --hero-wm-scrim:0;    /* Hero-Video: lokaler heller Verlauf hinter der dunklen Wortmarke "NITA NOVA" */
   --hero-halftone:.05;    /* Hero-Video: Punktraster */
   --hero-grain:.28;       /* Hero: Koernung (liegt ueber der ganzen Hero-Flaeche) */
   --hero-photo-m:.78;     /* Hero-Video mobil: Deckkraft ueber der dunklen Flaeche */
@@ -440,3 +440,7 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
 .vs span[style*="text-stroke"]{-webkit-text-stroke-color:var(--cream)!important;text-shadow:0 1px 12px rgba(20,18,22,.45)}
 /* Mobil-Menue: neun Punkte, Eintraege behalten ihre Hoehe (44 px) und das Menue liegt ueber Hero-Text und Label */
 #menu>div>a{flex:none;box-sizing:border-box}
+
+/* Instagram-Abschnitt: gleicher Hintergrund wie Live Vocals */
+#instagram{position:relative;isolation:isolate;overflow:hidden;background:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27600%27 height=%27600%27%3E%3Cfilter id=%27f%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.05 0.3%27 numOctaves=%274%27 seed=%273%27 stitchTiles=%27stitch%27/%3E%3CfeColorMatrix values=%270 0 0 0 0.35  0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 -0.9 0.42%27/%3E%3C/filter%3E%3Crect width=%27100%%27 height=%27100%%27 filter=%27url%28%23f%29%27/%3E%3C/svg%3E') 0 0/600px 600px,url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27400%27 height=%27400%27%3E%3Cfilter id=%27f%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.9%27 numOctaves=%272%27 seed=%277%27 stitchTiles=%27stitch%27/%3E%3CfeColorMatrix values=%270 0 0 0 0.25  0 0 0 0 0.1  0 0 0 0 0.08  0 0 0 -1.6 0.62%27/%3E%3C/filter%3E%3Crect width=%27100%%27 height=%27100%%27 filter=%27url%28%23f%29%27/%3E%3C/svg%3E') 0 0/400px 400px,radial-gradient(ellipse 28% 22% at 18% 20%,rgba(255,225,200,.30),transparent 70%),radial-gradient(ellipse 30% 26% at 72% 12%,rgba(255,215,190,.26),transparent 70%),radial-gradient(ellipse 26% 24% at 40% 62%,rgba(200,80,70,.16),transparent 70%),radial-gradient(ellipse 30% 22% at 85% 70%,rgba(255,220,195,.24),transparent 70%),radial-gradient(ellipse 24% 20% at 8% 85%,rgba(190,70,60,.18),transparent 70%),radial-gradient(ellipse 85% 95% at 50% 45%,transparent 55%,rgba(150,50,40,.3)),#F28A72;color:#141216}
+#instagram .lead{color:#141216}
