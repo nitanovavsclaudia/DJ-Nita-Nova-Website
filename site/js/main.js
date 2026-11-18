@@ -393,7 +393,7 @@
   function initOptionalImages() {
     $$('.thumb[data-thumb]').forEach(function (d) {
       var p = 'img/thumbs/' + d.getAttribute('data-thumb') + '.webp';
-      if (have(p)) d.style.backgroundImage = 'url(/' + p + ')';
+      if (have(p)) d.style.backgroundImage = 'url(/' + p + '?v=2)';
     });
   }
 
