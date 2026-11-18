@@ -450,3 +450,17 @@ mark.ph{background:#ffd9d9;color:#9b0020;font-weight:700;padding:1px 4px;border:
 
 /* Testimonials -> Playlists: Elfsight-Widget bringt eigenen Leerraum mit; Abstand nach unten straffen */
 #testimonials .widget-slot{margin-bottom:calc(-1 * var(--sec-y) + 8px)}
+
+/* Showreel-Play-Button: unter der Nummer, Glas-Optik mit 3D-Kante */
+.vs{justify-content:flex-start!important;align-items:flex-start!important}
+.vs .vs-play{position:absolute!important;left:20px;top:100px;width:54px!important;height:54px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.38),rgba(255,255,255,.08) 45%,rgba(20,18,22,.18))!important;
+  -webkit-backdrop-filter:blur(10px) saturate(1.5);backdrop-filter:blur(10px) saturate(1.5);
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 2px 1px rgba(255,255,255,.75),inset 0 -6px 10px rgba(90,20,40,.28),0 10px 22px -6px rgba(20,8,16,.65),0 0 0 4px rgba(255,255,255,.08);
+  transition:transform .25s cubic-bezier(.3,.7,.2,1),box-shadow .25s}
+.vs .vs-play::before{content:"";position:absolute;left:12%;right:12%;top:5%;height:42%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));pointer-events:none}
+.vs .vs-play svg{width:20px;height:20px;margin-left:3px;position:relative;filter:drop-shadow(0 1px 2px rgba(20,8,16,.5))}
+.vs .vs-play svg path{fill:#fff!important}
+button:hover .vs .vs-play,button:focus-visible .vs .vs-play,.vs:hover .vs-play{transform:scale(1.1)}
+@media(max-width:720px){.vs .vs-play{left:16px;top:138px;width:46px!important;height:46px!important}}
